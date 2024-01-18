@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { traverseGrid } from "../store/gridSlice";
+import { Store } from "../store/Store";
 
 //red:wall
 //blue:start
 //green:end
-async function Propagate({ id, row, col, gridRefs }) {
-  const dispatch = useDispatch();
+function Propagate({ id, row, col, gridRefs }) {
   const grid = useSelector((state) => state.grid.grids);
   let targetId = null;
   let startId = null;
@@ -25,7 +25,7 @@ async function Propagate({ id, row, col, gridRefs }) {
   if (startAlgo) {
     let arr = [id];
     while (arr.length && !pathfound) {
-      arr = dispatch(
+      arr = Store.dispatch(
         traverseGrid({
           arr: arr,
           gridRefs: gridRefs,

@@ -26,9 +26,9 @@ const initialState = {
 
 /*
   let gridArray = [];
-  let height = 5;
+  let rows = 5;
   let width = 10;
-  for (let i = 0; i < height; i++) {
+  for (let i = 0; i < rows; i++) {
     let arr = [];
     for (let j = 0; j < width; j++) {
       arr.push(<Box />);
@@ -49,14 +49,14 @@ const initialState = {
 export const gridSlice = createSlice({
   name: "grid",
   initialState,
-  reducer: {
+  reducers: {
     createGrid: (state, action) => {
       let gridArray = [];
-      let height = action.payload.height;
-      let width = action.payload.width;
-      for (let i = 0; i < height; i++) {
+      let rows = action.payload.rows;
+      let columns = action.payload.columns;
+      for (let i = 0; i < rows; i++) {
         let arr = [];
-        for (let j = 0; j < width; j++) {
+        for (let j = 0; j < columns; j++) {
           let obj = {
             id: nanoid(),
             value: 0,
@@ -80,17 +80,17 @@ export const gridSlice = createSlice({
             arr.map((ele, col) => {
               if (ele.value === 0) {
                 ele.value = 1;
-                state.grids.traversed[ele.id] = 1;
+                state.traversed[ele.id] = 1;
                 gridRefs.current[row][col].style = "blue";
                 adjElements.push(
-                  ...state.grid.getAdjacentElements({
+                  ...state.getAdjacentElements({
                     id: ele.id,
                     row: row,
                     col: col,
                   }),
                 );
               } else if (ele.value === 20) {
-                state.grid.pathfound = 1;
+                state.pathfound = 1;
               }
             });
           });
@@ -128,10 +128,28 @@ export const gridSlice = createSlice({
         });
       });
     },
+    wallMode: (state, action) => {
+      const id = action.payload.id;
+      const value = action.payload.value;
+
+      state.wallSelectionMode = !state.wallSelectionMode;
+    },
+    targetMode: (state, action) => {
+      state.targetSelectionMode = !state.targetSelectionMode;
+    },
+    startMode: (state, action) => {
+      state.startSelectionMode = !state.targetSelectionMode;
+    },
   },
 });
-
-export const { getAdjacentElements, setValue, createGrid, traverseGrid } =
-  gridSlice.actions;
+export const {
+  wallMode,
+  targetMode,
+  startMode,
+  getAdjacentElements,
+  setValue,
+  createGrid,
+  traverseGrid,
+} = gridSlice.actions;
 
 export default gridSlice.reducer;
